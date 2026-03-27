@@ -6,9 +6,23 @@ const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const app = express();
 
+const allowedOrigins = new Set(env.clientOrigins.map((origin) => origin.replace(/\/+$/, "")));
+
 app.use(
   cors({
-    origin: env.clientUrl,
+    origin(origin, callback) {
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      const normalizedOrigin = origin.replace(/\/+$/, "");
+
+      if (allowedOrigins.has(normalizedOrigin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
   })
 );
 app.use(express.json());
