@@ -10,7 +10,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api/teams', require('./routes/teamRoutes'));
-app.use('/api/matches', require('./routes/matchRoutes'));
+const matchRoutes = require('./routes/matchRoutes');
+app.use('/api/matches', matchRoutes);
 app.use('/api/predictions', require('./routes/predictionRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/leaderboard', require('./routes/leaderboardRoutes'));
@@ -30,3 +31,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`);
 });
+console.log("Match route loaded ✅");
