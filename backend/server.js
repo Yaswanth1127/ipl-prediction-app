@@ -11,6 +11,7 @@ app.use(express.json());
 // Routes
 app.use('/api/teams', require('./routes/teamRoutes'));
 app.use('/api/matches', require('./routes/matchRoutes'));
+
 app.use('/api/predictions', require('./routes/predictionRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/leaderboard', require('./routes/leaderboardRoutes'));
@@ -22,6 +23,9 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.get('/', (req, res) => {
   res.send("IPL Predictor API Running 🏏");
+});
+app.get('/', (req, res) => {
+  res.send("Backend working ✅");
 });
 
 const PORT = process.env.PORT || 5000;
