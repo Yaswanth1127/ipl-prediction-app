@@ -1,14 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const Match = require('../models/Match');
+const express = require("express");
+const { listMatches, getMatchById } = require("../controllers/matchController");
 
-router.get('/', async (req, res) => {
-  try {
-    const matches = await Match.find();
-    res.json(matches);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+const router = express.Router();
+
+router.get("/", listMatches);
+router.get("/:id", getMatchById);
 
 module.exports = router;

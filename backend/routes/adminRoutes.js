@@ -1,24 +1,18 @@
-const express = require('express');
+const express = require("express");
+const {
+  listAdminMatches,
+  updateDeadline,
+  updateResult,
+  listPredictionsForMatch,
+} = require("../controllers/adminController");
+const { requireAuth, requireRole } = require("../middlewares/authMiddleware");
+
 const router = express.Router();
-const Match = require('../models/Match');
-const Prediction = require('../models/Prediction');
-const calculatePoints = require('../utils/calculatePoints');
 
-router.post('/result/:matchId', async (req, res) => {
-  const match = await Match.findById(req.params.matchId);
-
-  match.result = req.body;
-  await match.save();
-
-  const predictions = await Prediction.find({ matchId: match._id });
-
-  for (let p of predictions) {
-    const points = calculatePoints(p, match.result);
-    p.points = points;
-    await p.save();
-  }
-
-  res.json({ message: "Results updated & points calculated" });
-});
+router.use(requireAuth, requireRole("admin"));
+router.get("/matches", listAdminMatches);
+router.patch("/matches/:id/deadline", updateDeadline);
+router.patch("/matches/:id/result", updateResult);
+router.get("/predictions/:matchId", listPredictionsForMatch);
 
 module.exports = router;

@@ -1,0 +1,88 @@
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import GoogleSignInButton from "../components/GoogleSignInButton";
+import { useAuth } from "../context/AuthContext";
+import { getRequestErrorMessage } from "../utils/errors";
+
+export default function SignInPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login, googleLogin } = useAuth();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const nextPath = location.state?.from?.pathname;
+
+  const routeAfterLogin = (role) => {
+    navigate(nextPath || (role === "admin" ? "/admin" : "/app/predictions"), { replace: true });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const user = await login(form);
+      routeAfterLogin(user.role);
+    } catch (requestError) {
+      setError(getRequestErrorMessage(requestError, "Unable to sign in."));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleGoogleLogin = async (credential) => {
+    setError("");
+
+    try {
+      const user = await googleLogin(credential);
+      routeAfterLogin(user.role);
+    } catch (requestError) {
+      setError(getRequestErrorMessage(requestError, "Google sign-in failed."));
+    }
+  };
+
+  return (
+    <div className="auth-shell">
+      <form className="auth-card" onSubmit={handleSubmit}>
+        <div className="signin-hero">
+          <p className="eyebrow">IPL Season Access</p>
+          <h1>Welcome To IPL 2026</h1>
+          <p className="signin-tagline">Enter the league, lock your picks, and chase the top of the table.</p>
+        </div>
+        <p className="muted">Users and admins share one secure sign-in. Role-based access is handled after login.</p>
+        {error ? <div className="error-banner">{error}</div> : null}
+
+        <label>
+          Email
+          <input
+            type="email"
+            value={form.email}
+            onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
+          />
+        </label>
+        <label>
+          Password
+          <input
+            type="password"
+            value={form.password}
+            onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+          />
+        </label>
+
+        <button type="submit" className="primary-button" disabled={isSubmitting}>
+          {isSubmitting ? "Signing In..." : "Sign In"}
+        </button>
+
+        <div className="divider">or</div>
+        <GoogleSignInButton onCredential={handleGoogleLogin} disabled={isSubmitting} />
+
+        <p className="muted small-text">
+          New here? <Link to="/signup">Create an account</Link>
+        </p>
+      </form>
+    </div>
+  );
+}
