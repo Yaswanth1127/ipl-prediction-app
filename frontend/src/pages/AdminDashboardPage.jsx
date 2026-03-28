@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
   const [deadlineDrafts, setDeadlineDrafts] = useState({});
   const [resultDrafts, setResultDrafts] = useState({});
   const [editingPredictions, setEditingPredictions] = useState({});
-  const [message, setMessage] = useState("");
+  const [actionModal, setActionModal] = useState({ open: false, title: "", body: "" });
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -89,14 +89,17 @@ export default function AdminDashboardPage() {
   }, []);
 
   const handleDeadlineUpdate = async (matchId) => {
-    setMessage("");
     setError("");
 
     try {
       await api.patch(`/admin/matches/${matchId}/deadline`, {
         deadline: parseIstDateTimeLocalValue(deadlineDrafts[matchId]),
       });
-      setMessage("Deadline updated in IST.");
+      setActionModal({
+        open: true,
+        title: "Deadline Updated",
+        body: "The prediction deadline was updated successfully and saved using IST timing.",
+      });
       await loadMatches();
     } catch (requestError) {
       setError(getRequestErrorMessage(requestError, "Could not update deadline."));
@@ -104,12 +107,15 @@ export default function AdminDashboardPage() {
   };
 
   const handleResultUpdate = async (matchId) => {
-    setMessage("");
     setError("");
 
     try {
       await api.patch(`/admin/matches/${matchId}/result`, resultDrafts[matchId]);
-      setMessage("Results posted and points recalculated.");
+      setActionModal({
+        open: true,
+        title: "Result Saved",
+        body: "The official result was saved and all prediction points were recalculated successfully.",
+      });
       await loadMatches();
       if (matchPredictions[matchId]) {
         await handleViewPredictions(matchId);
@@ -159,7 +165,6 @@ export default function AdminDashboardPage() {
   };
 
   const handlePredictionUpdate = async (matchId, predictionId) => {
-    setMessage("");
     setError("");
 
     try {
@@ -170,14 +175,17 @@ export default function AdminDashboardPage() {
         ...current,
         [matchId]: (current[matchId] || []).map((entry) => (entry.id === predictionId ? data : entry)),
       }));
-      setMessage("Prediction updated.");
+      setActionModal({
+        open: true,
+        title: "Prediction Updated",
+        body: "The user prediction was updated successfully from the admin portal.",
+      });
     } catch (requestError) {
       setError(getRequestErrorMessage(requestError, "Could not update prediction."));
     }
   };
 
   const handlePredictionDelete = async (matchId, predictionId) => {
-    setMessage("");
     setError("");
 
     try {
@@ -192,7 +200,11 @@ export default function AdminDashboardPage() {
           Object.entries(current[matchId] || {}).filter(([key]) => key !== predictionId)
         ),
       }));
-      setMessage("Prediction deleted.");
+      setActionModal({
+        open: true,
+        title: "Prediction Deleted",
+        body: "The prediction was deleted successfully.",
+      });
       await loadMatches();
     } catch (requestError) {
       setError(getRequestErrorMessage(requestError, "Could not delete prediction."));
@@ -204,6 +216,33 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="stack-page">
+      {actionModal.open ? (
+        <div
+          className="modal-backdrop"
+          role="presentation"
+          onClick={() => setActionModal({ open: false, title: "", body: "" })}
+        >
+          <div
+            className="modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="admin-action-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="eyebrow">Admin Update</p>
+            <h3 id="admin-action-title">{actionModal.title}</h3>
+            <p className="muted">{actionModal.body}</p>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => setActionModal({ open: false, title: "", body: "" })}
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <header className="page-header">
         <div>
           <p className="eyebrow">Admin Portal</p>
@@ -212,7 +251,6 @@ export default function AdminDashboardPage() {
         </div>
       </header>
 
-      {message ? <div className="success-banner">{message}</div> : null}
       {error ? <div className="error-banner">{error}</div> : null}
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 

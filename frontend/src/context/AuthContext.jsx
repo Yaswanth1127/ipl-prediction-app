@@ -8,12 +8,13 @@ const USER_KEY = "ipl_prediction_user";
 
 export function AuthProvider({ children }) {
   const skipBootstrapRef = useRef(false);
+  const initialStoredUser = typeof window !== "undefined" ? window.localStorage.getItem(USER_KEY) : null;
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
   const [user, setUser] = useState(() => {
     const raw = localStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
   });
-  const [isBootstrapping, setIsBootstrapping] = useState(() => Boolean(token && !localStorage.getItem(USER_KEY)));
+  const [isBootstrapping, setIsBootstrapping] = useState(() => Boolean(token && !initialStoredUser));
 
   useEffect(() => {
     setApiToken(token);
@@ -26,7 +27,7 @@ export function AuthProvider({ children }) {
         return;
       }
 
-       if (user) {
+      if (user) {
         setIsBootstrapping(false);
       }
 
