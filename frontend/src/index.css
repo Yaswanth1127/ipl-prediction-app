@@ -130,6 +130,10 @@ label {
   align-items: center;
 }
 
+.hero-actions a {
+  text-align: center;
+}
+
 .primary-button,
 .secondary-button,
 .ghost-button,
@@ -215,6 +219,12 @@ label {
   gap: 1rem;
 }
 
+.auth-card .primary-button,
+.hero-actions .primary-button,
+.hero-actions .secondary-button {
+  min-height: 52px;
+}
+
 .auth-card h1 {
   margin: 0;
   font-size: clamp(2.2rem, 5vw, 3.2rem);
@@ -264,6 +274,7 @@ label {
 
 .site-brand {
   min-width: 180px;
+  max-width: 240px;
 }
 
 .top-nav {
@@ -284,6 +295,7 @@ label {
   display: flex;
   align-items: center;
   margin-bottom: 0;
+  gap: 0.75rem;
 }
 
 .topbar-user {
@@ -801,16 +813,53 @@ th {
 }
 
 @media (max-width: 640px) {
+  .marketing-shell,
+  .auth-shell {
+    padding: 1rem;
+    align-items: start;
+  }
+
   .content {
-    padding: 1rem 0.75rem 1.5rem;
+    padding: 0.9rem 0.75rem 1.5rem;
   }
 
   .site-header {
-    align-items: flex-start;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
   }
 
   .field-compact {
     max-width: none;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .site-brand {
+    min-width: 0;
+    max-width: 120px;
+  }
+
+  .site-brand .eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.2rem;
+  }
+
+  .site-brand strong {
+    display: block;
+    font-size: 0.92rem;
+    line-height: 1.1;
+  }
+
+  .content-topbar {
+    margin-left: auto;
+  }
+
+  .topbar-user {
+    display: none;
   }
 
   .compact-prediction-grid,
@@ -823,6 +872,51 @@ th {
   }
 
   .menu-dropdown {
-    min-width: min(220px, calc(100vw - 2rem));
+    right: -0.25rem;
+    width: min(260px, calc(100vw - 1.5rem));
+    min-width: 0;
+  }
+
+  .hero-panel,
+  .auth-card {
+    width: 100%;
+    padding: 1.4rem;
+    border-radius: 22px;
+  }
+
+  .hero-panel h1,
+  .auth-card h1,
+  .signin-hero h1,
+  .league-hero-copy h2 {
+    font-size: clamp(2rem, 10vw, 2.8rem);
+  }
+
+  .hero-actions {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .hero-actions a {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.95rem 0.85rem;
+    font-size: 1.05rem;
+  }
+
+  .signin-hero {
+    padding: 0.95rem;
+  }
+
+  .league-hero {
+    padding: 1rem;
+  }
+
+  .league-hero-badge {
+    min-height: 120px;
+  }
+
+  .menu-button {
+    width: 44px;
+    height: 44px;
   }
 }

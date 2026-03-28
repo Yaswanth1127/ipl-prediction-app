@@ -13,6 +13,18 @@ const api = axios.create({
     : undefined,
 });
 
+api.interceptors.request.use((config) => {
+  const token =
+    typeof window !== "undefined" ? window.localStorage.getItem(TOKEN_KEY) || "" : "";
+
+  if (token) {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 export const setApiToken = (token) => {
   if (token) {
     api.defaults.headers.common.Authorization = `Bearer ${token}`;

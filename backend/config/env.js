@@ -25,5 +25,9 @@ module.exports = {
     .split(",")
     .map((email) => String(email || "").trim().toLowerCase())
     .filter(Boolean),
+  adminNames: (process.env.ADMIN_NAMES || "")
+    .split(",")
+    .map((name) => String(name || "").trim())
+    .filter(Boolean),
   adminPassword: process.env.ADMIN_PASSWORD || "",
 };

@@ -125,6 +125,25 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleClearResult = async (matchId) => {
+    setError("");
+
+    try {
+      await api.delete(`/admin/matches/${matchId}/result`);
+      setActionModal({
+        open: true,
+        title: "Result Cleared",
+        body: "The official result was cleared and all related prediction points were reset successfully.",
+      });
+      await loadMatches();
+      if (matchPredictions[matchId]) {
+        await handleViewPredictions(matchId);
+      }
+    } catch (requestError) {
+      setError(getRequestErrorMessage(requestError, "Could not clear result."));
+    }
+  };
+
   const handleViewPredictions = async (matchId) => {
     setError("");
 
@@ -261,6 +280,7 @@ export default function AdminDashboardPage() {
             team2: teamMap.get(match.team2),
           };
           const predictionOptions = getPredictionFieldOptions(match, matchTeams);
+          const hasSavedResult = predictionFieldOrder.some((field) => Boolean(match.result?.[field]));
 
           return (
             <section key={match.id} className="card">
@@ -323,9 +343,16 @@ export default function AdminDashboardPage() {
                       />
                     ))}
                   </div>
-                  <button type="button" className="primary-button" onClick={() => handleResultUpdate(match.id)}>
-                    Save Result
-                  </button>
+                  <div className="table-actions">
+                    <button type="button" className="primary-button" onClick={() => handleResultUpdate(match.id)}>
+                      Save Result
+                    </button>
+                    {hasSavedResult ? (
+                      <button type="button" className="ghost-button" onClick={() => handleClearResult(match.id)}>
+                        Clear Result
+                      </button>
+                    ) : null}
+                  </div>
                 </div>
               </div>
 

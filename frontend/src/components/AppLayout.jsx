@@ -32,7 +32,7 @@ export default function AppLayout({ portal }) {
           <strong>{portal === "admin" ? "Admin Portal" : "Friends League"}</strong>
         </div>
 
-        <nav className="top-nav">
+        <nav className="top-nav desktop-nav">
           {links.map((link) => (
             <NavLink
               key={link.to}

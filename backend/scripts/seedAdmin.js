@@ -2,7 +2,7 @@ require("../config/env");
 const connectDb = require("../config/db");
 const env = require("../config/env");
 const User = require("../models/User");
-const { hashPassword } = require("../services/authService");
+const { hashPassword, getAdminDisplayName } = require("../services/authService");
 
 const seedAdmin = async () => {
   if (!env.adminEmails.length || !env.adminPassword) {
@@ -14,10 +14,14 @@ const seedAdmin = async () => {
   const passwordHash = await hashPassword(env.adminPassword);
 
   for (const email of env.adminEmails) {
+    const existingUser = await User.findOne({ email });
+    const nextName =
+      existingUser?.name && existingUser.name !== env.adminName ? existingUser.name : getAdminDisplayName(email);
+
     const admin = await User.findOneAndUpdate(
       { email },
       {
-        name: env.adminName,
+        name: nextName,
         email,
         passwordHash,
         role: "admin",

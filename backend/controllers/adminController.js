@@ -11,6 +11,11 @@ const { calculatePoints } = require("../services/pointsService");
 const { deriveMatchStatus } = require("../services/matchService");
 const { serializeMatch } = require("./matchController");
 
+const emptyResult = RESULT_FIELDS.reduce((acc, field) => {
+  acc[field] = "";
+  return acc;
+}, {});
+
 const listAdminMatches = asyncHandler(async (req, res) => {
   const matches = await Match.find().sort({ startTime: 1 });
   const predictionCounts = await Prediction.aggregate([
@@ -75,6 +80,32 @@ const updateResult = asyncHandler(async (req, res) => {
 
   res.json({
     message: "Results saved and leaderboard recalculated.",
+    match: serializeMatch(match),
+  });
+});
+
+const clearResult = asyncHandler(async (req, res) => {
+  const match = await Match.findById(req.params.id);
+
+  if (!match) {
+    return res.status(404).json({ message: "Match not found." });
+  }
+
+  match.result = { ...emptyResult };
+  match.status = deriveMatchStatus(match);
+  await match.save();
+
+  const predictions = await Prediction.find({ matchId: match._id });
+  const isLocked = new Date(match.deadline) <= new Date();
+
+  for (const prediction of predictions) {
+    prediction.points = calculatePoints(prediction, match.result);
+    prediction.lockedAt = isLocked ? new Date(match.deadline) : null;
+    await prediction.save();
+  }
+
+  res.json({
+    message: "Results cleared and points reset.",
     match: serializeMatch(match),
   });
 });
@@ -152,6 +183,7 @@ module.exports = {
   listAdminMatches,
   updateDeadline,
   updateResult,
+  clearResult,
   listPredictionsForMatch,
   updatePredictionForMatch,
   deletePredictionForMatch,

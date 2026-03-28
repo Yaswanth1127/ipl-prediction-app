@@ -42,10 +42,16 @@ export function AuthProvider({ children }) {
         setUser(data.user);
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       } catch (error) {
-        localStorage.removeItem(TOKEN_KEY);
-        localStorage.removeItem(USER_KEY);
-        setToken("");
-        setUser(null);
+        const status = error?.response?.status;
+
+        if (status === 401 || status === 403) {
+          localStorage.removeItem(TOKEN_KEY);
+          localStorage.removeItem(USER_KEY);
+          setToken("");
+          setUser(null);
+        } else if (token && user) {
+          setApiToken(token);
+        }
       } finally {
         setIsBootstrapping(false);
       }
