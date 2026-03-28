@@ -5,7 +5,7 @@ const initialToken =
   typeof window !== "undefined" ? window.localStorage.getItem(TOKEN_KEY) || "" : "";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://ipl-prediction-app-2.onrender.com/api",
   headers: initialToken
     ? {
         Authorization: `Bearer ${initialToken}`,
