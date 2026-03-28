@@ -5,7 +5,7 @@ const User = require("../models/User");
 const { hashPassword } = require("../services/authService");
 
 const seedAdmin = async () => {
-  if (!env.adminEmail || !env.adminPassword) {
+  if (!env.adminEmails.length || !env.adminPassword) {
     throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD are required to seed the admin user.");
   }
 
@@ -13,22 +13,25 @@ const seedAdmin = async () => {
 
   const passwordHash = await hashPassword(env.adminPassword);
 
-  const admin = await User.findOneAndUpdate(
-    { email: env.adminEmail.toLowerCase() },
-    {
-      name: env.adminName,
-      email: env.adminEmail.toLowerCase(),
-      passwordHash,
-      role: "admin",
-    },
-    {
-      upsert: true,
-      new: true,
-      setDefaultsOnInsert: true,
-    }
-  );
+  for (const email of env.adminEmails) {
+    const admin = await User.findOneAndUpdate(
+      { email },
+      {
+        name: env.adminName,
+        email,
+        passwordHash,
+        role: "admin",
+      },
+      {
+        upsert: true,
+        new: true,
+        setDefaultsOnInsert: true,
+      }
+    );
 
-  console.log(`Admin ready: ${admin.email}`);
+    console.log(`Admin ready: ${admin.email}`);
+  }
+
   process.exit(0);
 };
 

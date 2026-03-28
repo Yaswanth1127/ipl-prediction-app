@@ -14,6 +14,7 @@ const predictionSchema = new mongoose.Schema(
     },
     prediction: {
       winner: { type: String, required: true, trim: true },
+      tossWinner: { type: String, required: true, trim: true },
       mostRuns: { type: String, required: true, trim: true },
       mostFours: { type: String, required: true, trim: true },
       mostSixes: { type: String, required: true, trim: true },
@@ -32,6 +33,7 @@ const predictionSchema = new mongoose.Schema(
       total: { type: Number, default: 0 },
       breakdown: {
         winner: { type: Number, default: 0 },
+        tossWinner: { type: Number, default: 0 },
         playerOfMatch: { type: Number, default: 0 },
         mostRuns: { type: Number, default: 0 },
         mostWickets: { type: Number, default: 0 },

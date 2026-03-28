@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
 import { formatDateTime, getCountdownLabel } from "../utils/formatters";
 import { getTeamPalette, TEAM_LOGO_PATHS } from "../utils/teams";
-
-const defaultForm = {
-  winner: "",
-  playerOfMatch: "",
-  mostRuns: "",
-  mostWickets: "",
-  mostFours: "",
-  mostSixes: "",
-};
-
-const getUniquePlayers = (...groups) =>
-  [...new Set(groups.flat().filter(Boolean))].sort((a, b) => a.localeCompare(b));
+import {
+  defaultPredictionForm,
+  getPredictionFieldOptions,
+  predictionFieldLabels,
+  predictionFieldOrder,
+} from "../utils/predictionFields";
 
 const TeamBadge = ({ shortName, name }) => {
   const palette = getTeamPalette(shortName);
@@ -65,46 +59,17 @@ const SelectField = ({ label, value, onChange, options, disabled, compact = fals
 );
 
 export default function PredictionCard({ match, teams, existingPrediction, onSave, isSaving }) {
-  const [form, setForm] = useState(defaultForm);
+  const [form, setForm] = useState(defaultPredictionForm);
 
   useEffect(() => {
-    setForm(existingPrediction?.prediction || defaultForm);
+    setForm({
+      ...defaultPredictionForm,
+      ...(existingPrediction?.prediction || {}),
+    });
   }, [existingPrediction]);
 
   const isLocked = new Date(match.deadline) <= new Date();
-  const team1Players = teams.team1?.players || {};
-  const team2Players = teams.team2?.players || {};
-  const groupedAllPlayers = [
-    {
-      label: teams.team1?.name || match.team1,
-      options: getUniquePlayers(
-        team1Players.batters || [],
-        team1Players.wicketkeepers || [],
-        team1Players.allRounders || [],
-        team1Players.bowlers || []
-      ),
-    },
-    {
-      label: teams.team2?.name || match.team2,
-      options: getUniquePlayers(
-        team2Players.batters || [],
-        team2Players.wicketkeepers || [],
-        team2Players.allRounders || [],
-        team2Players.bowlers || []
-      ),
-    },
-  ].filter((group) => group.options.length);
-  const groupedWicketOptions = [
-    {
-      label: teams.team1?.name || match.team1,
-      options: getUniquePlayers(team1Players.bowlers || [], team1Players.allRounders || []),
-    },
-    {
-      label: teams.team2?.name || match.team2,
-      options: getUniquePlayers(team2Players.bowlers || [], team2Players.allRounders || []),
-    },
-  ].filter((group) => group.options.length);
-  const teamOptions = [match.team1, match.team2];
+  const predictionOptions = getPredictionFieldOptions(match, teams);
 
   const handleChange = (field) => (event) => {
     setForm((current) => ({
@@ -140,25 +105,23 @@ export default function PredictionCard({ match, teams, existingPrediction, onSav
       </div>
 
       <form className="prediction-grid compact-prediction-grid" onSubmit={handleSubmit}>
-        <SelectField
-          label="Winner"
-          value={form.winner}
-          onChange={handleChange("winner")}
-          options={teamOptions}
-          disabled={isLocked || isSaving}
-          compact
-        />
-        <SelectField label="Player of the Match" value={form.playerOfMatch} onChange={handleChange("playerOfMatch")} options={groupedAllPlayers} disabled={isLocked || isSaving} />
-        <SelectField label="Most Runs" value={form.mostRuns} onChange={handleChange("mostRuns")} options={groupedAllPlayers} disabled={isLocked || isSaving} />
-        <SelectField label="Most Fours" value={form.mostFours} onChange={handleChange("mostFours")} options={groupedAllPlayers} disabled={isLocked || isSaving} />
-        <SelectField label="Most Wickets" value={form.mostWickets} onChange={handleChange("mostWickets")} options={groupedWicketOptions.length ? groupedWicketOptions : groupedAllPlayers} disabled={isLocked || isSaving} />
-        <SelectField label="Most Sixes" value={form.mostSixes} onChange={handleChange("mostSixes")} options={groupedAllPlayers} disabled={isLocked || isSaving} />
+        {predictionFieldOrder.map((field) => (
+          <SelectField
+            key={field}
+            label={predictionFieldLabels[field]}
+            value={form[field]}
+            onChange={handleChange(field)}
+            options={predictionOptions[field]}
+            disabled={isLocked || isSaving}
+            compact
+          />
+        ))}
 
         <div className="card-footer">
           <p className="muted small-text">
             Deadline: {formatDateTime(match.deadline)}
             <br />
-            Points: Winner 50, Player of the Match 30, Runs/Wickets 20, Fours/Sixes 15.
+            Points: Winner 50, Toss 50, Player of the Match 30, Runs/Wickets 20, Fours/Sixes 15.
           </p>
           <button type="submit" className="primary-button" disabled={isLocked || isSaving}>
             {isSaving ? "Saving..." : existingPrediction ? "Update Prediction" : "Save Prediction"}

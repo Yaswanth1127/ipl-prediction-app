@@ -24,6 +24,9 @@ const serializeUser = (user) => ({
   },
 });
 
+const getRoleForEmail = (email) =>
+  env.adminEmails.includes(String(email || "").trim().toLowerCase()) ? "admin" : "user";
+
 const verifyGoogleToken = async (credential) => {
   if (!env.googleClientId) {
     const error = new Error("Google sign-in is not configured.");
@@ -44,5 +47,6 @@ module.exports = {
   comparePassword,
   createToken,
   serializeUser,
+  getRoleForEmail,
   verifyGoogleToken,
 };

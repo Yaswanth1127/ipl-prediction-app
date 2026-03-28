@@ -67,6 +67,11 @@ select {
   padding-right: 2.5rem;
 }
 
+label {
+  display: grid;
+  gap: 0.25rem;
+}
+
 #root {
   min-height: 100vh;
 }
@@ -202,6 +207,12 @@ select {
   padding: 2rem;
   display: grid;
   gap: 1rem;
+}
+
+.auth-card h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  line-height: 1.05;
 }
 
 .signin-hero {
@@ -578,6 +589,11 @@ select {
   padding: 0.5rem;
 }
 
+.predictions-table-scroll {
+  max-height: 34rem;
+  overflow: auto;
+}
+
 .teams-row {
   align-items: center;
   justify-content: flex-start;
@@ -639,9 +655,53 @@ th {
   font-weight: 700;
 }
 
+.table-card td select {
+  min-width: 180px;
+  margin-top: 0;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .google-button.disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #6d5735;
+  display: grid;
+  place-items: center;
+}
+
+.password-toggle:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.password-toggle-icon {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .pagination-bar {

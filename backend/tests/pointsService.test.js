@@ -7,6 +7,7 @@ test("calculatePoints awards the configured totals", () => {
     {
       prediction: {
         winner: "RCB",
+        tossWinner: "RCB",
         playerOfMatch: "Virat Kohli",
         mostRuns: "Virat Kohli",
         mostWickets: "Hazlewood",
@@ -16,6 +17,7 @@ test("calculatePoints awards the configured totals", () => {
     },
     {
       winner: "RCB",
+      tossWinner: "RCB",
       playerOfMatch: "Virat Kohli",
       mostRuns: "Virat Kohli",
       mostWickets: "Hazlewood",
@@ -25,10 +27,11 @@ test("calculatePoints awards the configured totals", () => {
   );
 
   assert.equal(result.breakdown.winner, POINT_RULES.winner);
+  assert.equal(result.breakdown.tossWinner, POINT_RULES.tossWinner);
   assert.equal(result.breakdown.playerOfMatch, POINT_RULES.playerOfMatch);
   assert.equal(result.breakdown.mostRuns, POINT_RULES.mostRuns);
   assert.equal(result.breakdown.mostWickets, POINT_RULES.mostWickets);
   assert.equal(result.breakdown.mostFours, POINT_RULES.mostFours);
   assert.equal(result.breakdown.mostSixes, 0);
-  assert.equal(result.total, 135);
+  assert.equal(result.total, 185);
 });

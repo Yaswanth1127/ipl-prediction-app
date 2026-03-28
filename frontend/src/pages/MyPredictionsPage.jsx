@@ -3,6 +3,7 @@ import Pagination from "../components/Pagination";
 import api from "../services/api";
 import { getRequestErrorMessage } from "../utils/errors";
 import { formatDateTime } from "../utils/formatters";
+import { predictionFieldLabels, predictionFieldOrder } from "../utils/predictionFields";
 
 const PAGE_SIZE = 6;
 
@@ -61,19 +62,19 @@ export default function MyPredictionsPage() {
             </div>
 
             <div className="summary-grid">
-              {Object.entries(entry.prediction).map(([key, value]) => (
-                <div key={key} className="summary-item">
-                  <span>{key}</span>
-                  <strong>{value}</strong>
+              {predictionFieldOrder.map((field) => (
+                <div key={field} className="summary-item">
+                  <span>{predictionFieldLabels[field]}</span>
+                  <strong>{entry.prediction[field] || "-"}</strong>
                 </div>
               ))}
             </div>
 
             <div className="summary-grid">
-              {Object.entries(entry.points.breakdown).map(([key, value]) => (
-                <div key={key} className="summary-item">
-                  <span>{key}</span>
-                  <strong>{value}</strong>
+              {predictionFieldOrder.map((field) => (
+                <div key={field} className="summary-item">
+                  <span>Actual {predictionFieldLabels[field]}</span>
+                  <strong>{entry.match?.result?.[field] || "Pending"}</strong>
                 </div>
               ))}
             </div>

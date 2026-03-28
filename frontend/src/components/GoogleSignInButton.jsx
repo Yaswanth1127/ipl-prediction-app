@@ -48,7 +48,7 @@ export default function GoogleSignInButton({ onCredential, disabled }) {
   }, [onCredential, disabled]);
 
   if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
-    return <p className="inline-note">Google sign-in is disabled until `VITE_GOOGLE_CLIENT_ID` is set.</p>;
+    return null;
   }
 
   return <div ref={buttonRef} className={disabled ? "google-button disabled" : "google-button"} />;

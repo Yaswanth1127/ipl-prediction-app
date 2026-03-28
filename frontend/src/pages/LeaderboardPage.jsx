@@ -25,7 +25,7 @@ export default function LeaderboardPage({ portal }) {
         <div>
           <p className="eyebrow">{portal === "admin" ? "Admin Portal" : "User Portal"}</p>
           <h2>Leaderboard</h2>
-          <p className="muted">Track total points across the league.</p>
+          <p className="muted">Rankings are decided by total points, with average shown for fairness across missed matches.</p>
         </div>
       </header>
       {error ? <div className="error-banner">{error}</div> : <LeaderboardTable rows={rows} />}

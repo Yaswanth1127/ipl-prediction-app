@@ -16,7 +16,12 @@ const adminNav = [
 
 export default function AppLayout({ portal }) {
   const { user, logout } = useAuth();
-  const links = portal === "admin" ? adminNav : userNav;
+  const links =
+    portal === "admin"
+      ? adminNav
+      : user?.role === "admin"
+        ? [...userNav, { label: "Admin Portal", to: "/admin" }]
+        : userNav;
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (

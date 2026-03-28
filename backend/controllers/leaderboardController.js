@@ -8,6 +8,7 @@ const getLeaderboard = asyncHandler(async (req, res) => {
         _id: "$userId",
         totalPoints: { $sum: "$points.total" },
         predictionCount: { $sum: 1 },
+        averagePoints: { $avg: "$points.total" },
       },
     },
     { $sort: { totalPoints: -1, predictionCount: -1 } },
@@ -25,9 +26,9 @@ const getLeaderboard = asyncHandler(async (req, res) => {
         _id: 0,
         userId: "$user._id",
         name: "$user.name",
-        email: "$user.email",
         totalPoints: 1,
         predictionCount: 1,
+        averagePoints: { $round: ["$averagePoints", 2] },
       },
     },
   ]);

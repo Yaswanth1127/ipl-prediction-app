@@ -20,6 +20,10 @@ module.exports = {
   clientOrigins,
   googleClientId: process.env.GOOGLE_CLIENT_ID || "",
   adminName: process.env.ADMIN_NAME || "League Admin",
-  adminEmail: process.env.ADMIN_EMAIL || "",
+  adminEmailsRaw: process.env.ADMIN_EMAIL || "",
+  adminEmails: (process.env.ADMIN_EMAIL || "")
+    .split(",")
+    .map((email) => String(email || "").trim().toLowerCase())
+    .filter(Boolean),
   adminPassword: process.env.ADMIN_PASSWORD || "",
 };

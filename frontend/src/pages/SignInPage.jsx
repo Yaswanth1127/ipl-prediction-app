@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import GoogleSignInButton from "../components/GoogleSignInButton";
+import PasswordField from "../components/PasswordField";
 import { useAuth } from "../context/AuthContext";
 import { getRequestErrorMessage } from "../utils/errors";
 
@@ -11,6 +12,7 @@ export default function SignInPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const googleEnabled = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
   const nextPath = location.state?.from?.pathname;
 
@@ -52,7 +54,6 @@ export default function SignInPage() {
           <h1>Welcome To IPL 2026</h1>
           <p className="signin-tagline">Enter the league, lock your picks, and chase the top of the table.</p>
         </div>
-        <p className="muted">Users and admins share one secure sign-in. Role-based access is handled after login.</p>
         {error ? <div className="error-banner">{error}</div> : null}
 
         <label>
@@ -63,21 +64,24 @@ export default function SignInPage() {
             onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
           />
         </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={form.password}
-            onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-          />
-        </label>
+        <PasswordField
+          label="Password"
+          name="password"
+          value={form.password}
+          onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+          disabled={isSubmitting}
+        />
 
         <button type="submit" className="primary-button" disabled={isSubmitting}>
           {isSubmitting ? "Signing In..." : "Sign In"}
         </button>
 
-        <div className="divider">or</div>
-        <GoogleSignInButton onCredential={handleGoogleLogin} disabled={isSubmitting} />
+        {googleEnabled ? (
+          <>
+            <div className="divider">or</div>
+            <GoogleSignInButton onCredential={handleGoogleLogin} disabled={isSubmitting} />
+          </>
+        ) : null}
 
         <p className="muted small-text">
           New here? <Link to="/signup">Create an account</Link>

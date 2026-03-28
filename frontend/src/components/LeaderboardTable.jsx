@@ -10,9 +10,8 @@ export default function LeaderboardTable({ rows }) {
           <tr>
             <th>Rank</th>
             <th>Name</th>
-            <th>Email</th>
             <th>Total Points</th>
-            <th>Predictions</th>
+            <th>Average</th>
           </tr>
         </thead>
         <tbody>
@@ -20,9 +19,8 @@ export default function LeaderboardTable({ rows }) {
             <tr key={row.userId}>
               <td>{row.rank}</td>
               <td>{row.name}</td>
-              <td>{row.email}</td>
               <td>{row.totalPoints}</td>
-              <td>{row.predictionCount}</td>
+              <td>{row.averagePoints}</td>
             </tr>
           ))}
         </tbody>

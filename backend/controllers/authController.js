@@ -5,6 +5,7 @@ const {
   comparePassword,
   createToken,
   serializeUser,
+  getRoleForEmail,
   verifyGoogleToken,
 } = require("../services/authService");
 
@@ -31,7 +32,7 @@ const signup = asyncHandler(async (req, res) => {
     name: String(name).trim(),
     email: normalizedEmail,
     passwordHash: await hashPassword(password),
-    role: "user",
+    role: getRoleForEmail(normalizedEmail),
   });
 
   res.status(201).json(createAuthResponse(user));
@@ -57,6 +58,13 @@ const login = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: "Invalid email or password." });
   }
 
+  const nextRole = getRoleForEmail(normalizedEmail);
+
+  if (user.role !== nextRole) {
+    user.role = nextRole;
+    await user.save();
+  }
+
   res.json(createAuthResponse(user));
 });
 
@@ -80,16 +88,21 @@ const googleLogin = asyncHandler(async (req, res) => {
     user = await User.create({
       name: payload.name || email.split("@")[0],
       email,
-      role: "user",
+      role: getRoleForEmail(email),
       providers: {
         googleId: payload.sub,
       },
     });
-  } else if (user.providers?.googleId !== payload.sub) {
-    user.providers = {
-      ...(user.providers?.toObject ? user.providers.toObject() : user.providers || {}),
-      googleId: payload.sub,
-    };
+  } else {
+    user.role = getRoleForEmail(email);
+
+    if (user.providers?.googleId !== payload.sub) {
+      user.providers = {
+        ...(user.providers?.toObject ? user.providers.toObject() : user.providers || {}),
+        googleId: payload.sub,
+      };
+    }
+
     await user.save();
   }
 

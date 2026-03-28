@@ -1,25 +1,13 @@
 const asyncHandler = require("../middlewares/asyncHandler");
 const Match = require("../models/Match");
 const Prediction = require("../models/Prediction");
+const {
+  PREDICTION_FIELDS,
+  buildFieldPayload,
+  hasAllFields,
+} = require("../constants/predictionFields");
 const { calculatePoints } = require("../services/pointsService");
 const { deriveMatchStatus } = require("../services/matchService");
-
-const requiredFields = [
-  "winner",
-  "mostRuns",
-  "mostFours",
-  "mostSixes",
-  "mostWickets",
-  "playerOfMatch",
-];
-
-const buildPredictionPayload = (body) =>
-  requiredFields.reduce((acc, field) => {
-    acc[field] = String(body[field] || "").trim();
-    return acc;
-  }, {});
-
-const validatePredictionPayload = (payload) => requiredFields.every((field) => payload[field]);
 
 const serializePrediction = (prediction) => ({
   id: prediction._id,
@@ -39,6 +27,7 @@ const serializePrediction = (prediction) => ({
         startTime: prediction.matchId.startTime,
         deadline: prediction.matchId.deadline,
         status: deriveMatchStatus(prediction.matchId),
+        result: prediction.matchId.result,
       }
     : undefined,
 });
@@ -54,9 +43,9 @@ const upsertPrediction = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Prediction deadline has passed." });
   }
 
-  const predictionPayload = buildPredictionPayload(req.body);
+  const predictionPayload = buildFieldPayload(PREDICTION_FIELDS, req.body);
 
-  if (!validatePredictionPayload(predictionPayload)) {
+  if (!hasAllFields(PREDICTION_FIELDS, predictionPayload)) {
     return res.status(400).json({ message: "All prediction fields are required." });
   }
 

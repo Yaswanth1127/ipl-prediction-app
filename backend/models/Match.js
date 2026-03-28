@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const resultSchema = new mongoose.Schema(
   {
     winner: { type: String, trim: true, default: "" },
+    tossWinner: { type: String, trim: true, default: "" },
     mostRuns: { type: String, trim: true, default: "" },
     mostFours: { type: String, trim: true, default: "" },
     mostSixes: { type: String, trim: true, default: "" },

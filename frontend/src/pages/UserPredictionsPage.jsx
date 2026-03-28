@@ -4,11 +4,12 @@ import PredictionCard from "../components/PredictionCard";
 import TeamTicker from "../components/TeamTicker";
 import api from "../services/api";
 import { getRequestErrorMessage } from "../utils/errors";
+import { getDateKeyInIst } from "../utils/formatters";
 
 const PAGE_SIZE = 1;
 
 const isUpcomingOrToday = (match) => new Date(match.startTime) >= new Date(new Date().setHours(0, 0, 0, 0));
-const getMatchDateKey = (match) => new Date(match.startTime).toISOString().slice(0, 10);
+const getMatchDateKey = (match) => getDateKeyInIst(match.startTime);
 const pickFirstMatchPerDay = (matches) => {
   const seen = new Set();
 

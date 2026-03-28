@@ -1,5 +1,6 @@
 const POINT_RULES = {
   winner: 50,
+  tossWinner: 50,
   playerOfMatch: 30,
   mostRuns: 20,
   mostWickets: 20,
@@ -17,6 +18,11 @@ const calculatePoints = (prediction, result) => {
     winner:
       normalizeValue(picks.winner) && normalizeValue(picks.winner) === normalizeValue(actual.winner)
         ? POINT_RULES.winner
+        : 0,
+    tossWinner:
+      normalizeValue(picks.tossWinner) &&
+      normalizeValue(picks.tossWinner) === normalizeValue(actual.tossWinner)
+        ? POINT_RULES.tossWinner
         : 0,
     playerOfMatch:
       normalizeValue(picks.playerOfMatch) &&
