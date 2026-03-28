@@ -35,6 +35,7 @@ export default function UserPredictionsPage() {
   const [upcomingPage, setUpcomingPage] = useState(1);
   const [completedPage, setCompletedPage] = useState(1);
   const [heroImageFailed, setHeroImageFailed] = useState(false);
+  const [saveModal, setSaveModal] = useState({ open: false, isUpdate: false });
 
   useEffect(() => {
     const load = async () => {
@@ -102,6 +103,10 @@ export default function UserPredictionsPage() {
         return [data, ...next];
       });
       setMessage("Prediction saved successfully.");
+      setSaveModal({
+        open: true,
+        isUpdate: Boolean(predictionMap.get(String(matchId))),
+      });
     } catch (requestError) {
       setError(getRequestErrorMessage(requestError, "Could not save prediction."));
     } finally {
@@ -111,6 +116,33 @@ export default function UserPredictionsPage() {
 
   return (
     <div className="stack-page">
+      {saveModal.open ? (
+        <div className="modal-backdrop" role="presentation" onClick={() => setSaveModal({ open: false, isUpdate: false })}>
+          <div
+            className="modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="prediction-save-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="eyebrow">Prediction Saved</p>
+            <h3 id="prediction-save-title">
+              {saveModal.isUpdate ? "Your prediction was updated successfully." : "Your prediction was submitted successfully."}
+            </h3>
+            <p className="muted">
+              You can edit this prediction any time before the deadline. Once the deadline passes, the prediction will be locked.
+            </p>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => setSaveModal({ open: false, isUpdate: false })}
+            >
+              Okay
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <section className="league-hero">
         <div className="league-hero-copy">
           <p className="eyebrow">IPL 2026</p>
