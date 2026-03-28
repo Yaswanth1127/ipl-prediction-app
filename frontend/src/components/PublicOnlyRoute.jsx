@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 export default function PublicOnlyRoute() {
   const { isAuthenticated, isBootstrapping, user } = useAuth();
 
-  if (isBootstrapping) {
+  if (isBootstrapping && !user) {
     return <div className="state-card">Checking your session...</div>;
   }
 

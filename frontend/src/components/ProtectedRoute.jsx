@@ -5,7 +5,7 @@ export default function ProtectedRoute({ roles }) {
   const { isAuthenticated, isBootstrapping, user } = useAuth();
   const location = useLocation();
 
-  if (isBootstrapping) {
+  if (isBootstrapping && !user) {
     return <div className="state-card">Checking your session...</div>;
   }
 

@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
     const raw = localStorage.getItem(USER_KEY);
     return raw ? JSON.parse(raw) : null;
   });
-  const [isBootstrapping, setIsBootstrapping] = useState(Boolean(token));
+  const [isBootstrapping, setIsBootstrapping] = useState(() => Boolean(token && !localStorage.getItem(USER_KEY)));
 
   useEffect(() => {
     setApiToken(token);
@@ -24,6 +24,10 @@ export function AuthProvider({ children }) {
       if (!token) {
         setIsBootstrapping(false);
         return;
+      }
+
+       if (user) {
+        setIsBootstrapping(false);
       }
 
       if (skipBootstrapRef.current) {
@@ -47,7 +51,7 @@ export function AuthProvider({ children }) {
     };
 
     bootstrap();
-  }, [token]);
+  }, [token, user]);
 
   const persistAuth = (payload) => {
     skipBootstrapRef.current = true;
