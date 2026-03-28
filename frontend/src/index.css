@@ -589,6 +589,99 @@ label {
   text-transform: capitalize;
 }
 
+.leaderboard-podium {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.podium-card {
+  padding: 1.2rem;
+  border-radius: 22px;
+  border: 1px solid rgba(116, 92, 63, 0.14);
+  box-shadow: 0 18px 48px rgba(66, 48, 28, 0.08);
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.52), transparent 34%),
+    linear-gradient(150deg, rgba(255, 252, 246, 0.98) 0%, rgba(244, 234, 220, 0.92) 100%);
+}
+
+.podium-card h3,
+.podium-points {
+  margin: 0;
+}
+
+.podium-points {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #2f2111;
+}
+
+.podium-card.first {
+  background:
+    radial-gradient(circle at top right, rgba(255, 244, 196, 0.82), transparent 38%),
+    linear-gradient(160deg, #fffaf0 0%, #f2df9e 100%);
+}
+
+.podium-card.second {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.72), transparent 38%),
+    linear-gradient(160deg, #faf8f4 0%, #d8dce2 100%);
+}
+
+.podium-card.third {
+  background:
+    radial-gradient(circle at top right, rgba(255, 228, 212, 0.72), transparent 38%),
+    linear-gradient(160deg, #fff7f1 0%, #ddb293 100%);
+}
+
+.place-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.place-badge.first {
+  background: #f4cf68;
+  border-color: #d4ad46;
+  color: #5b4106;
+}
+
+.place-badge.second {
+  background: #e4e7ec;
+  border-color: #b8bec6;
+  color: #4d5762;
+}
+
+.place-badge.third {
+  background: #e8bf9e;
+  border-color: #c99771;
+  color: #66381d;
+}
+
+.leaderboard-table-card {
+  overflow-x: auto;
+}
+
+.leaderboard-row.first td {
+  background: rgba(244, 207, 104, 0.12);
+}
+
+.leaderboard-row.second td {
+  background: rgba(200, 206, 216, 0.14);
+}
+
+.leaderboard-row.third td {
+  background: rgba(221, 178, 147, 0.14);
+}
+
 .admin-grid {
   align-items: stretch;
 }
@@ -784,7 +877,8 @@ th {
   .prediction-grid,
   .prediction-grid.compact,
   .admin-grid,
-  .compact-prediction-grid {
+  .compact-prediction-grid,
+  .leaderboard-podium {
     grid-template-columns: 1fr;
     flex-direction: column;
   }

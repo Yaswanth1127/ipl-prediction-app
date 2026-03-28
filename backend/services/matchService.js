@@ -1,3 +1,9 @@
+const isTossLocked = (matchLike, now = new Date()) =>
+  new Date(matchLike.startTime) <= now;
+
+const isPredictionLocked = (matchLike, now = new Date()) =>
+  new Date(matchLike.deadline) <= now;
+
 const deriveMatchStatus = (matchLike, now = new Date()) => {
   const result = matchLike?.result || {};
   const hasResult = [
@@ -14,7 +20,7 @@ const deriveMatchStatus = (matchLike, now = new Date()) => {
     return "completed";
   }
 
-  if (new Date(matchLike.deadline) <= now) {
+  if (isPredictionLocked(matchLike, now)) {
     return "locked";
   }
 
@@ -23,4 +29,6 @@ const deriveMatchStatus = (matchLike, now = new Date()) => {
 
 module.exports = {
   deriveMatchStatus,
+  isPredictionLocked,
+  isTossLocked,
 };

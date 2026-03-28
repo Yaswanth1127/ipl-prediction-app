@@ -110,7 +110,7 @@ export default function UserPredictionsPage() {
               {saveModal.isUpdate ? "Your prediction was updated successfully." : "Your prediction was submitted successfully."}
             </h3>
             <p className="muted">
-              You can edit this prediction any time before the deadline. Once the deadline passes, the prediction will be locked.
+              Toss Winner locks at 3:00 PM or 7:00 PM IST. The rest of the prediction stays editable until 3:30 PM or 7:30 PM IST.
             </p>
             <button
               type="button"

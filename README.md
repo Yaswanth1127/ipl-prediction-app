@@ -7,7 +7,7 @@ Production-style IPL prediction website for a friends league, with separate user
 - Email/password signup and login
 - Google sign-in support
 - Role-based access for `user` and `admin`
-- Prediction editing until the configured deadline
+- Toss winner editing until 3:00 PM or 7:00 PM IST, with the remaining prediction fields open until 3:30 PM or 7:30 PM IST
 - Admin deadline override for delays or rain
 - Admin result posting with automatic leaderboard recalculation
 - User prediction history and leaderboard view

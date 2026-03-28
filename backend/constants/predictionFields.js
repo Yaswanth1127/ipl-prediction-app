@@ -8,6 +8,8 @@ const PREDICTION_FIELDS = [
   "mostSixes",
 ];
 
+const NON_TOSS_PREDICTION_FIELDS = PREDICTION_FIELDS.filter((field) => field !== "tossWinner");
+
 const RESULT_FIELDS = [...PREDICTION_FIELDS];
 
 const FIELD_LABELS = {
@@ -30,6 +32,7 @@ const hasAllFields = (fields, payload) => fields.every((field) => payload[field]
 
 module.exports = {
   PREDICTION_FIELDS,
+  NON_TOSS_PREDICTION_FIELDS,
   RESULT_FIELDS,
   FIELD_LABELS,
   buildFieldPayload,

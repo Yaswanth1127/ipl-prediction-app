@@ -68,7 +68,10 @@ export default function PredictionCard({ match, teams, existingPrediction, onSav
     });
   }, [existingPrediction]);
 
+  const tossLocked = new Date(match.startTime) <= new Date();
   const isLocked = new Date(match.deadline) <= new Date();
+  const hasSavedTossWinner = Boolean(existingPrediction?.prediction?.tossWinner);
+  const canSubmit = !isLocked && (!tossLocked || hasSavedTossWinner);
   const predictionOptions = getPredictionFieldOptions(match, teams);
 
   const handleChange = (field) => (event) => {
@@ -112,22 +115,32 @@ export default function PredictionCard({ match, teams, existingPrediction, onSav
             value={form[field]}
             onChange={handleChange(field)}
             options={predictionOptions[field]}
-            disabled={isLocked || isSaving}
+            disabled={isSaving || isLocked || (field === "tossWinner" && tossLocked)}
             compact
           />
         ))}
 
         <div className="card-footer">
           <p className="muted small-text">
-            Deadline: {formatDateTime(match.deadline)}
+            Toss lock: {formatDateTime(match.startTime)}
+            <br />
+            Final deadline: {formatDateTime(match.deadline)}
+            <br />
+            Toss Winner locks at toss time. All other fields stay editable until 3:30 PM or 7:30 PM IST.
             <br />
             Points: Winner 50, Toss 50, Player of the Match 30, Runs/Wickets 20, Fours/Sixes 15.
           </p>
-          <button type="submit" className="primary-button" disabled={isLocked || isSaving}>
+          <button type="submit" className="primary-button" disabled={!canSubmit || isSaving}>
             {isSaving ? "Saving..." : existingPrediction ? "Update Prediction" : "Save Prediction"}
           </button>
         </div>
       </form>
+
+      {tossLocked && !hasSavedTossWinner ? (
+        <p className="muted small-text">
+          Toss Winner is already locked for this match, so new submissions are closed. Saved predictions can still update the remaining fields until the final deadline.
+        </p>
+      ) : null}
     </section>
   );
 }

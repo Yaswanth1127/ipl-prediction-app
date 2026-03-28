@@ -3,11 +3,16 @@ const Match = require("../models/Match");
 const Prediction = require("../models/Prediction");
 const {
   PREDICTION_FIELDS,
+  NON_TOSS_PREDICTION_FIELDS,
   buildFieldPayload,
   hasAllFields,
 } = require("../constants/predictionFields");
 const { calculatePoints } = require("../services/pointsService");
-const { deriveMatchStatus } = require("../services/matchService");
+const {
+  deriveMatchStatus,
+  isPredictionLocked,
+  isTossLocked,
+} = require("../services/matchService");
 
 const serializePrediction = (prediction) => ({
   id: prediction._id,
@@ -39,20 +44,42 @@ const upsertPrediction = asyncHandler(async (req, res) => {
     return res.status(404).json({ message: "Match not found." });
   }
 
-  if (new Date() > new Date(match.deadline)) {
+  if (isPredictionLocked(match)) {
     return res.status(400).json({ message: "Prediction deadline has passed." });
-  }
-
-  const predictionPayload = buildFieldPayload(PREDICTION_FIELDS, req.body);
-
-  if (!hasAllFields(PREDICTION_FIELDS, predictionPayload)) {
-    return res.status(400).json({ message: "All prediction fields are required." });
   }
 
   let prediction = await Prediction.findOne({
     userId: req.user._id,
     matchId: match._id,
   });
+
+  const predictionPayload = buildFieldPayload(PREDICTION_FIELDS, req.body);
+  const tossLocked = isTossLocked(match);
+
+  if (tossLocked) {
+    if (!prediction?.prediction?.tossWinner) {
+      return res.status(400).json({
+        message: "Toss prediction is locked. Save your toss winner before the match starts.",
+      });
+    }
+
+    if (
+      typeof req.body?.tossWinner !== "undefined" &&
+      String(req.body.tossWinner || "").trim() !== prediction.prediction.tossWinner
+    ) {
+      return res.status(400).json({
+        message: "Toss winner cannot be changed after the match starts.",
+      });
+    }
+
+    predictionPayload.tossWinner = prediction.prediction.tossWinner;
+
+    if (!hasAllFields(NON_TOSS_PREDICTION_FIELDS, predictionPayload)) {
+      return res.status(400).json({ message: "All remaining prediction fields are required." });
+    }
+  } else if (!hasAllFields(PREDICTION_FIELDS, predictionPayload)) {
+    return res.status(400).json({ message: "All prediction fields are required." });
+  }
 
   const calculatedPoints = calculatePoints({ prediction: predictionPayload }, match.result);
 
