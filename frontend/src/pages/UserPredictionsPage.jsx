@@ -4,26 +4,10 @@ import PredictionCard from "../components/PredictionCard";
 import TeamTicker from "../components/TeamTicker";
 import api from "../services/api";
 import { getRequestErrorMessage } from "../utils/errors";
-import { getDateKeyInIst } from "../utils/formatters";
 
 const PAGE_SIZE = 1;
 
 const isUpcomingOrToday = (match) => new Date(match.startTime) >= new Date(new Date().setHours(0, 0, 0, 0));
-const getMatchDateKey = (match) => getDateKeyInIst(match.startTime);
-const pickFirstMatchPerDay = (matches) => {
-  const seen = new Set();
-
-  return matches.filter((match) => {
-    const key = getMatchDateKey(match);
-
-    if (seen.has(key)) {
-      return false;
-    }
-
-    seen.add(key);
-    return true;
-  });
-};
 
 export default function UserPredictionsPage() {
   const [matches, setMatches] = useState([]);
@@ -64,20 +48,16 @@ export default function UserPredictionsPage() {
   const teamMap = useMemo(() => new Map(teams.map((team) => [team.shortName, team])), [teams]);
   const upcomingMatches = useMemo(
     () =>
-      pickFirstMatchPerDay(
-        matches
-          .filter((match) => isUpcomingOrToday(match))
-          .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
-      ),
+      matches
+        .filter((match) => isUpcomingOrToday(match))
+        .sort((a, b) => new Date(a.startTime) - new Date(b.startTime)),
     [matches]
   );
   const completedMatches = useMemo(
     () =>
-      pickFirstMatchPerDay(
-        matches
-          .filter((match) => !isUpcomingOrToday(match))
-          .sort((a, b) => new Date(b.startTime) - new Date(a.startTime))
-      ),
+      matches
+        .filter((match) => !isUpcomingOrToday(match))
+        .sort((a, b) => new Date(b.startTime) - new Date(a.startTime)),
     [matches]
   );
   const upcomingTotalPages = Math.max(1, Math.ceil(upcomingMatches.length / PAGE_SIZE));

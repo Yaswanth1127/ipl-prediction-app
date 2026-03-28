@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import api, { setApiToken } from "../services/api";
 
 const AuthContext = createContext(null);
@@ -7,6 +7,7 @@ const TOKEN_KEY = "ipl_prediction_token";
 const USER_KEY = "ipl_prediction_user";
 
 export function AuthProvider({ children }) {
+  const skipBootstrapRef = useRef(false);
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
   const [user, setUser] = useState(() => {
     const raw = localStorage.getItem(USER_KEY);
@@ -21,6 +22,12 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const bootstrap = async () => {
       if (!token) {
+        setIsBootstrapping(false);
+        return;
+      }
+
+      if (skipBootstrapRef.current) {
+        skipBootstrapRef.current = false;
         setIsBootstrapping(false);
         return;
       }
@@ -43,8 +50,10 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   const persistAuth = (payload) => {
+    skipBootstrapRef.current = true;
     setToken(payload.token);
     setUser(payload.user);
+    setIsBootstrapping(false);
     localStorage.setItem(TOKEN_KEY, payload.token);
     localStorage.setItem(USER_KEY, JSON.stringify(payload.user));
     setApiToken(payload.token);
