@@ -31,6 +31,10 @@ app.get("/", (req, res) => {
   res.json({ message: "IPL Predictor API running." });
 });
 
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true, message: "API healthy." });
+});
+
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/teams", require("./routes/teamRoutes"));
 app.use("/api/matches", require("./routes/matchRoutes"));

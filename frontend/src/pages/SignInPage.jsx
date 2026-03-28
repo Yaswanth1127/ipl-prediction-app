@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 import PasswordField from "../components/PasswordField";
 import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 import { getRequestErrorMessage } from "../utils/errors";
 
 export default function SignInPage() {
@@ -12,9 +13,32 @@ export default function SignInPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isWarmingUp, setIsWarmingUp] = useState(true);
   const googleEnabled = Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
   const nextPath = location.state?.from?.pathname;
+
+  useEffect(() => {
+    let active = true;
+
+    const warmUpBackend = async () => {
+      try {
+        await api.get("/health");
+      } catch {
+        // The real sign-in request will still surface any actual error.
+      } finally {
+        if (active) {
+          setIsWarmingUp(false);
+        }
+      }
+    };
+
+    warmUpBackend();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const routeAfterLogin = (role) => {
     navigate(nextPath || (role === "admin" ? "/admin" : "/app/predictions"), { replace: true });
@@ -75,6 +99,7 @@ export default function SignInPage() {
         <button type="submit" className="primary-button" disabled={isSubmitting}>
           {isSubmitting ? "Signing In..." : "Sign In"}
         </button>
+        {isWarmingUp ? <p className="muted small-text">Waking up the server for a faster sign-in...</p> : null}
 
         {googleEnabled ? (
           <>
