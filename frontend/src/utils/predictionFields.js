@@ -34,6 +34,7 @@ export const getGroupedPlayerOptions = (match, teams) => {
     {
       label: teams.team1?.name || match.team1,
       options: getUniquePlayers(
+        teams.team1?.captain,
         team1Players.batters || [],
         team1Players.wicketkeepers || [],
         team1Players.allRounders || [],
@@ -43,6 +44,7 @@ export const getGroupedPlayerOptions = (match, teams) => {
     {
       label: teams.team2?.name || match.team2,
       options: getUniquePlayers(
+        teams.team2?.captain,
         team2Players.batters || [],
         team2Players.wicketkeepers || [],
         team2Players.allRounders || [],
@@ -59,11 +61,19 @@ export const getGroupedWicketOptions = (match, teams) => {
   return [
     {
       label: teams.team1?.name || match.team1,
-      options: getUniquePlayers(team1Players.bowlers || [], team1Players.allRounders || []),
+      options: getUniquePlayers(
+        teams.team1?.captain,
+        team1Players.bowlers || [],
+        team1Players.allRounders || []
+      ),
     },
     {
       label: teams.team2?.name || match.team2,
-      options: getUniquePlayers(team2Players.bowlers || [], team2Players.allRounders || []),
+      options: getUniquePlayers(
+        teams.team2?.captain,
+        team2Players.bowlers || [],
+        team2Players.allRounders || []
+      ),
     },
   ].filter((group) => group.options.length);
 };
