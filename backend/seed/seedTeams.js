@@ -12,7 +12,7 @@ const teams = [
     players: {
       batters: [
         "Yashasvi Jaiswal","Shimron Hetmyer","Shubham Dubey",
-        "Vaibhav Suryavanshi","Lhuan-Dre Pretorius","Aman Rao Parela"
+        "Vaibhav Suryavanshi","Lhuan-Dre Pretorius","Aman Rao Parela","Riyan Parag"
       ],
       wicketkeepers: ["Dhruv Jurel","Donovan Ferreira"],
       allRounders: ["Ravindra Jadeja","Dasun Shanaka"],
@@ -29,7 +29,7 @@ const teams = [
     shortName: "CSK",
     captain: "Ruturaj Gaikwad",
     players: {
-      batters: ["Dewald Brevis","Ayush Mhatre","Sarfaraz Khan"],
+      batters: ["Dewald Brevis","Ayush Mhatre","Sarfaraz Khan","Ruturaj Gaikwad"],
       wicketkeepers: ["MS Dhoni","Sanju Samson","Urvil Patel","Kartik Sharma"],
       allRounders: [
         "Shivam Dube","Jamie Overton","Ramakrishna Ghosh","Anshul Kamboj",
@@ -51,7 +51,7 @@ const teams = [
       wicketkeepers: ["KL Rahul","Abishek Porel","Tristan Stubbs","Ben Duckett"],
       allRounders: [
         "Sameer Rizvi","Ashutosh Sharma","Vipraj Nigam","Ajay Mandal",
-        "Tripurana Vijay","Madhav Tiwari","Auqib Dar"
+        "Tripurana Vijay","Madhav Tiwari","Auqib Dar","Axar Patel"
       ],
       bowlers: [
         "Mitchell Starc","T Natarajan","Mukesh Kumar","Dushmantha Chameera",
@@ -65,7 +65,7 @@ const teams = [
     shortName: "GT",
     captain: "Shubman Gill",
     players: {
-      batters: ["Sai Sudharsan","Shahrukh Khan"],
+      batters: ["Sai Sudharsan","Shahrukh Khan","Shubman Gill"],
       wicketkeepers: ["Jos Buttler","Kumar Kushagra","Anuj Rawat","Tom Banton"],
       allRounders: ["Washington Sundar","Nishant Sindhu","Glenn Phillips","Rahul Tewatia","Jason Holder"],
       bowlers: [
@@ -96,7 +96,7 @@ const teams = [
     captain: "Rishabh Pant",
     players: {
       batters: ["Aiden Markram","Himmat Singh","Matthew Breetzke","Akshat Raghuwanshi"],
-      wicketkeepers: ["Nicholas Pooran","Josh Inglis","Mukul Choudhary"],
+      wicketkeepers: ["Nicholas Pooran","Josh Inglis","Mukul Choudhary","Rishabh Pant"],
       allRounders: [
         "Mitchell Marsh","Abdul Samad","Shahbaz Ahmed","Arshin Kulkarni",
         "Wanindu Hasaranga","Ayush Badoni"
@@ -118,7 +118,7 @@ const teams = [
       wicketkeepers: ["Quinton de Kock","Ryan Rickelton","Robin Minz"],
       allRounders: [
         "Mitchell Santner","Raj Bawa","Corbin Bosch","Will Jacks",
-        "Sherfane Rutherford","Atharva Ankolekar","Mayank Rawat"
+        "Sherfane Rutherford","Atharva Ankolekar","Mayank Rawat","Hardik Pandya"
       ],
       bowlers: [
         "Jasprit Bumrah","Trent Boult","Deepak Chahar","Shardul Thakur",
@@ -133,7 +133,8 @@ const teams = [
     shortName: "PBKS",
     captain: "Shreyas Iyer",
     players: {
-      batters: ["Nehal Wadhera","Harnoor Pannu","Pyla Avinash","Shashank Singh","Priyansh Arya","Suryansh Shedge"],
+    captain: "Shreyas Iyer",
+      batters: ["Nehal Wadhera","Harnoor Pannu","Pyla Avinash","Shashank Singh","Priyansh Arya","Suryansh Shedge","Shreyas Iyer"],
       wicketkeepers: ["Prabhsimran Singh","Vishnu Vinod"],
       allRounders: ["Marcus Stoinis","Harpreet Brar","Marco Jansen","Azmatullah Omarzai","Musheer Khan","Mitch Owen","Cooper Connolly"],
       bowlers: ["Arshdeep Singh","Yuzvendra Chahal","Vyshak Vijaykumar","Ben Dwarshuis","Yash Thakur","Xavier Bartlett","Lockie Ferguson"]
@@ -145,7 +146,7 @@ const teams = [
     shortName: "RCB",
     captain: "Rajat Patidar",
     players: {
-      batters: ["Virat Kohli","Devdutt Padikkal"],
+      batters: ["Virat Kohli","Devdutt Padikkal","Rajat Patidar"],
       wicketkeepers: ["Phil Salt","Jitesh Sharma","Jordan Cox"],
       allRounders: [
         "Krunal Pandya","Swapnil Singh","Tim David","Romario Shepherd",
@@ -170,7 +171,7 @@ const teams = [
       bowlers: [
         "Harshal Patel","Brydon Carse","Jaydev Unadkat","Eshan Malinga",
         "Zeeshan Ansari","Shivam Mavi","Sakib Hussain",
-        "Onkar Tarmale","Amit Kumar","Praful Hinge"
+        "Onkar Tarmale","Amit Kumar","Praful Hinge","Pat Cummins"
       ]
     }
   }
